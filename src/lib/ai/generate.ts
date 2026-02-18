@@ -1,6 +1,4 @@
 import Anthropic from "@anthropic-ai/sdk"
-import { readFileSync } from "fs"
-import { resolve } from "path"
 import { extractJSON, AIParseError } from "./extract-json"
 import {
   brandSummarySchema,
@@ -21,26 +19,12 @@ import { buildResultMappingsPrompt } from "./prompts/result-mappings"
 
 const MAX_RETRIES = 3
 
-function getApiKey(): string {
-  // process.env may be overridden by an empty shell variable,
-  // so fall back to reading .env.local directly
-  const envKey = process.env.ANTHROPIC_API_KEY
-  if (envKey) return envKey
-
-  try {
-    const envPath = resolve(process.cwd(), ".env.local")
-    const content = readFileSync(envPath, "utf8")
-    const match = content.match(/^ANTHROPIC_API_KEY=(.+)$/m)
-    if (match?.[1]) return match[1].trim()
-  } catch {
-    // ignore file read errors
-  }
-
-  throw new Error("ANTHROPIC_API_KEY is not set. Check your .env.local file.")
-}
-
 function getClient(): Anthropic {
-  return new Anthropic({ apiKey: getApiKey() })
+  const apiKey = process.env.ANTHROPIC_API_KEY
+  if (!apiKey) {
+    throw new Error("ANTHROPIC_API_KEY is not set.")
+  }
+  return new Anthropic({ apiKey })
 }
 
 async function callClaude(prompt: string, retryContext?: string): Promise<string> {
