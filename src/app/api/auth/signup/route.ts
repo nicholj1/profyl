@@ -71,25 +71,10 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     )
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Signup error:", error)
-
-    // Extract detailed error info for debugging
-    const err = error as Record<string, unknown>
-    const details = {
-      message: err?.message || "Unknown",
-      code: err?.code || "none",
-      severity: err?.severity || "none",
-      detail: err?.detail || "none",
-      hint: err?.hint || "none",
-      routine: err?.routine || "none",
-      cause: err?.cause ? String(err.cause) : "none",
-      name: err?.name || "none",
-      errno: err?.errno || "none",
-    }
-
     return NextResponse.json(
-      { error: `Signup failed (v5): ${JSON.stringify(details)}` },
+      { error: "Something went wrong. Please try again." },
       { status: 500 }
     )
   }
