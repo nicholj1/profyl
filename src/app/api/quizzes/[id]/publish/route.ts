@@ -43,9 +43,9 @@ export async function PATCH(
         columns: { id: true },
       })
 
-      if (questionCount.length < 8) {
+      if (questionCount.length < 7) {
         return NextResponse.json(
-          { error: "Quiz must have at least 8 questions to publish" },
+          { error: "Quiz must have at least 7 questions to publish" },
           { status: 422 }
         )
       }
