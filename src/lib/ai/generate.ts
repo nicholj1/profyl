@@ -27,7 +27,11 @@ function getClient(): Anthropic {
   return new Anthropic({ apiKey })
 }
 
-async function callClaude(prompt: string, retryContext?: string): Promise<string> {
+async function callClaude(
+  prompt: string,
+  retryContext?: string,
+  maxTokens: number = 4096
+): Promise<string> {
   const client = getClient()
 
   const messages: Anthropic.MessageParam[] = [
@@ -46,7 +50,7 @@ async function callClaude(prompt: string, retryContext?: string): Promise<string
 
   const response = await client.messages.create({
     model: "claude-sonnet-4-20250514",
-    max_tokens: 4096,
+    max_tokens: maxTokens,
     messages,
   })
 
@@ -61,13 +65,14 @@ async function callClaude(prompt: string, retryContext?: string): Promise<string
 async function generateWithRetry<T>(
   prompt: string,
   validate: (raw: unknown) => T,
-  businessValidate?: (parsed: T) => string | null
+  businessValidate?: (parsed: T) => string | null,
+  maxTokens: number = 4096
 ): Promise<T> {
   let lastError: string | undefined
 
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
-      const raw = await callClaude(prompt, lastError)
+      const raw = await callClaude(prompt, lastError, maxTokens)
       const json = extractJSON(raw)
       const parsed = validate(json)
 
@@ -138,12 +143,14 @@ export async function generateQuizStructure(
 
 export async function generateResultMappings(
   quiz: GeneratedQuiz,
-  resultTypeNames: string[]
+  resultTypeNames: string[],
+  brandSummary: BrandSummary
 ): Promise<GeneratedResultMappings> {
-  const prompt = buildResultMappingsPrompt(quiz, resultTypeNames)
+  const prompt = buildResultMappingsPrompt(quiz, resultTypeNames, brandSummary)
   return generateWithRetry(
     prompt,
     (json) => generatedResultMappingsSchema.parse(json),
-    (parsed) => validateResultMappings(parsed, quiz)
+    (parsed) => validateResultMappings(parsed, quiz),
+    8192
   )
 }

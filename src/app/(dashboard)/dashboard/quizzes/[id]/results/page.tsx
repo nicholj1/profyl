@@ -33,6 +33,7 @@ interface ResultType {
   sortOrder: number
   name: string
   description: string
+  recommendationDetail: string | null
   colour: string | null
 }
 
@@ -61,6 +62,7 @@ export default function ResultTypesPage() {
   const [editingResultId, setEditingResultId] = useState<string | null>(null)
   const [nameDraft, setNameDraft] = useState("")
   const [descriptionDraft, setDescriptionDraft] = useState("")
+  const [recommendationDetailDraft, setRecommendationDetailDraft] = useState("")
   const [colourDraft, setColourDraft] = useState("")
 
   // Published state
@@ -100,6 +102,7 @@ export default function ResultTypesPage() {
           body: JSON.stringify({
             name: nameDraft,
             description: descriptionDraft,
+            recommendation_detail: recommendationDetailDraft,
             colour: colourDraft,
           }),
         }
@@ -116,6 +119,7 @@ export default function ResultTypesPage() {
                   ...rt,
                   name: nameDraft,
                   description: descriptionDraft,
+                  recommendationDetail: recommendationDetailDraft,
                   colour: colourDraft,
                 }
               : rt
@@ -271,11 +275,11 @@ export default function ResultTypesPage() {
 
       {/* Result Types */}
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold">Result Types</h2>
+        <h2 className="text-lg font-semibold">Recommendations</h2>
         <p className="text-sm text-muted-foreground">
-          These are the personality types/outcomes that respondents will be
-          assigned to. Edit the names, descriptions, and colours to match your
-          brand.
+          These are the personalised recommendations quiz-takers will receive.
+          Edit the names, descriptions, recommendation details, and colours to
+          match your brand.
         </p>
 
         {quiz.resultTypes.map((rt) => (
@@ -302,8 +306,16 @@ export default function ResultTypesPage() {
                     onChange={(e) =>
                       setDescriptionDraft(e.target.value)
                     }
-                    placeholder="Description shown to the respondent"
+                    placeholder="Why this recommendation is perfect for them (2-3 sentences)"
                     rows={3}
+                  />
+                  <Textarea
+                    value={recommendationDetailDraft}
+                    onChange={(e) =>
+                      setRecommendationDetailDraft(e.target.value)
+                    }
+                    placeholder="The specific recommendation details — recipe, routine, product suggestion, etc."
+                    rows={4}
                   />
                   <div className="flex gap-2">
                     <Button
@@ -329,6 +341,7 @@ export default function ResultTypesPage() {
                   onClick={() => {
                     setNameDraft(rt.name)
                     setDescriptionDraft(rt.description)
+                    setRecommendationDetailDraft(rt.recommendationDetail || "")
                     setColourDraft(rt.colour || "#6C5CE7")
                     setEditingResultId(rt.id)
                   }}
@@ -347,6 +360,16 @@ export default function ResultTypesPage() {
                     <p className="mt-1 text-sm text-muted-foreground">
                       {rt.description}
                     </p>
+                    {rt.recommendationDetail && (
+                      <div className="mt-2 rounded bg-muted/50 px-3 py-2">
+                        <p className="text-xs font-medium text-muted-foreground">
+                          Recommendation detail
+                        </p>
+                        <p className="mt-0.5 text-sm">
+                          {rt.recommendationDetail}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

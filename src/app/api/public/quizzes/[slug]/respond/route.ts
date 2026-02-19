@@ -92,6 +92,7 @@ export async function POST(
         result_type: {
           name: scoreResult.name,
           description: scoreResult.description,
+          recommendation_detail: scoreResult.recommendationDetail,
           colour: scoreResult.colour,
         },
       },

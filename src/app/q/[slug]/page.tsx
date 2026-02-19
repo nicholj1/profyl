@@ -42,6 +42,7 @@ interface ResultData {
   result_type: {
     name: string
     description: string
+    recommendation_detail: string | null
     colour: string | null
   }
 }
@@ -207,7 +208,7 @@ export default function PublicQuizPage() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
         <Loader2 className="mb-4 h-8 w-8 animate-spin text-primary" />
-        <p className="text-sm font-medium">Calculating your result...</p>
+        <p className="text-sm font-medium">Creating your personalised recommendation...</p>
       </div>
     )
   }
@@ -215,13 +216,13 @@ export default function PublicQuizPage() {
   // Result screen
   if (phase === "result" && result) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8">
         <div className="mx-auto max-w-lg text-center">
           <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-            <CheckCircle2 className="h-10 w-10 text-primary" />
+            <Sparkles className="h-10 w-10 text-primary" />
           </div>
           <p className="mb-2 text-sm font-medium uppercase tracking-wide text-muted-foreground">
-            Your result
+            Your perfect match
           </p>
           <h1
             className="mb-4 text-3xl font-bold"
@@ -229,11 +230,29 @@ export default function PublicQuizPage() {
           >
             {result.result_type.name}
           </h1>
-          <div className="mb-8 rounded-lg border bg-card p-6 text-left">
+          <div className="mb-4 rounded-lg border bg-card p-6 text-left">
             <p className="text-sm leading-relaxed text-muted-foreground">
               {result.result_type.description}
             </p>
           </div>
+          {result.result_type.recommendation_detail && (
+            <div
+              className="mb-8 rounded-lg border-2 p-6 text-left"
+              style={{
+                borderColor: result.result_type.colour || "hsl(var(--primary))",
+                backgroundColor: result.result_type.colour
+                  ? `${result.result_type.colour}08`
+                  : "hsl(var(--primary) / 0.03)",
+              }}
+            >
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Your recommendation
+              </p>
+              <p className="text-sm leading-relaxed">
+                {result.result_type.recommendation_detail}
+              </p>
+            </div>
+          )}
           <p className="text-xs text-muted-foreground">
             Powered by{" "}
             <span className="font-medium text-primary">Profyl</span>

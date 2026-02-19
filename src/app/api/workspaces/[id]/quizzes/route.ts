@@ -54,7 +54,8 @@ export async function POST(
     // Step 2: Generate result types and mappings
     const generatedMappings = await generateResultMappings(
       generatedQuiz,
-      concept.result_type_names
+      concept.result_type_names,
+      brand_summary
     )
 
     // Step 3: Save everything to database
@@ -87,6 +88,8 @@ export async function POST(
           sortOrder: qIdx,
           text: q.text,
           questionType: q.question_type,
+          insight: q.insight || null,
+          dataDimension: q.data_dimension || null,
         })
         .returning()
 
@@ -128,6 +131,7 @@ export async function POST(
           sortOrder: i,
           name: rt.name,
           description: rt.description,
+          recommendationDetail: rt.recommendation_detail || null,
           colour: defaultColours[i % defaultColours.length],
         })
         .returning()

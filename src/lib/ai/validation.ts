@@ -11,6 +11,16 @@ export const brandSummarySchema = z.object({
   tone: z.string().min(1),
   key_themes: z.array(z.string()).min(3).max(5),
   summary: z.string().min(20),
+  products_or_services: z
+    .array(
+      z.object({
+        name: z.string().min(1),
+        description: z.string().min(1),
+      })
+    )
+    .min(1)
+    .max(8),
+  recommendation_domain: z.string().min(5),
 })
 
 export type BrandSummary = z.infer<typeof brandSummarySchema>
@@ -22,8 +32,9 @@ export type BrandSummary = z.infer<typeof brandSummarySchema>
 export const quizConceptSchema = z.object({
   title: z.string().min(1).max(80),
   description: z.string().min(1),
-  outcome_framing: z.string().min(1),
+  recommendation_type: z.string().min(1),
   result_type_names: z.array(z.string()).min(4).max(6),
+  data_dimensions: z.array(z.string()).min(4).max(8),
 })
 
 export const quizConceptsArraySchema = z
@@ -44,13 +55,15 @@ const generatedOptionSchema = z.object({
 const generatedQuestionSchema = z.object({
   text: z.string().min(1),
   question_type: z.enum(["single_choice", "multi_select"]),
+  data_dimension: z.string().min(1),
+  insight: z.string().min(10),
   options: z.array(generatedOptionSchema).min(3).max(6),
 })
 
 export const generatedQuizSchema = z.object({
   title: z.string().min(1),
   intro_text: z.string().min(20),
-  questions: z.array(generatedQuestionSchema).min(8).max(12),
+  questions: z.array(generatedQuestionSchema).min(7).max(10),
 })
 
 export type GeneratedQuiz = z.infer<typeof generatedQuizSchema>
@@ -62,6 +75,7 @@ export type GeneratedQuiz = z.infer<typeof generatedQuizSchema>
 const generatedResultTypeSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(20),
+  recommendation_detail: z.string().min(20),
 })
 
 const mappingEntrySchema = z.object({
@@ -86,8 +100,8 @@ export type GeneratedResultMappings = z.infer<
 
 export function validateQuizStructure(quiz: GeneratedQuiz): string | null {
   // Check question count
-  if (quiz.questions.length < 8 || quiz.questions.length > 12) {
-    return `Expected 8-12 questions, got ${quiz.questions.length}`
+  if (quiz.questions.length < 7 || quiz.questions.length > 10) {
+    return `Expected 7-10 questions, got ${quiz.questions.length}`
   }
 
   // Check each question has enough options

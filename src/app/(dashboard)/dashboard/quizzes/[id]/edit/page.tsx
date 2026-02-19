@@ -36,6 +36,8 @@ interface Question {
   sortOrder: number
   text: string
   questionType: string
+  insight: string | null
+  dataDimension: string | null
   answerOptions: AnswerOption[]
 }
 
@@ -461,6 +463,22 @@ export default function QuizEditPage() {
                   )}
                 </div>
               </div>
+
+              {/* Insight & data dimension (brand-facing only) */}
+              {(question.insight || question.dataDimension) && (
+                <div className="ml-10 mt-1 flex items-center gap-2">
+                  {question.dataDimension && (
+                    <Badge variant="outline" className="text-xs">
+                      {question.dataDimension}
+                    </Badge>
+                  )}
+                  {question.insight && (
+                    <span className="text-xs text-muted-foreground">
+                      {question.insight}
+                    </span>
+                  )}
+                </div>
+              )}
 
               {/* Answer options */}
               <div className="ml-10 space-y-2">

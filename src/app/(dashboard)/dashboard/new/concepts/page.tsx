@@ -24,8 +24,9 @@ import { useToast } from "@/hooks/use-toast"
 interface QuizConcept {
   title: string
   description: string
-  outcome_framing: string
+  recommendation_type: string
   result_type_names: string[]
+  data_dimensions: string[]
 }
 
 interface BrandSummary {
@@ -35,6 +36,8 @@ interface BrandSummary {
   tone: string
   key_themes: string[]
   summary: string
+  products_or_services: { name: string; description: string }[]
+  recommendation_domain: string
 }
 
 export default function ConceptSelectionPage() {
@@ -273,18 +276,30 @@ export default function ConceptSelectionPage() {
               <div className="space-y-3">
                 <div>
                   <p className="text-xs font-medium text-muted-foreground">
-                    Outcome framing
+                    What quiz-takers receive
                   </p>
-                  <p className="mt-0.5 text-sm">{concept.outcome_framing}</p>
+                  <p className="mt-0.5 text-sm">{concept.recommendation_type}</p>
                 </div>
                 <div>
                   <p className="mb-1.5 text-xs font-medium text-muted-foreground">
-                    Result types
+                    Recommendations
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {concept.result_type_names.map((name, i) => (
                       <Badge key={i} variant="secondary" className="text-xs">
                         {name}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="mb-1.5 text-xs font-medium text-muted-foreground">
+                    Data captured
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {concept.data_dimensions.map((dim, i) => (
+                      <Badge key={i} variant="outline" className="text-xs">
+                        {dim}
                       </Badge>
                     ))}
                   </div>
@@ -338,7 +353,7 @@ export default function ConceptSelectionPage() {
             <div>
               <p className="text-sm font-medium">Building your quiz</p>
               <p className="text-xs text-muted-foreground">
-                The AI is crafting questions, answer options, and result types.
+                The AI is crafting questions, answer options, and personalised recommendations.
                 This usually takes 30-60 seconds.
               </p>
             </div>

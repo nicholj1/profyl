@@ -139,6 +139,8 @@ export const questions = pgTable(
     questionType: questionTypeEnum("question_type")
       .notNull()
       .default("single_choice"),
+    insight: text("insight"),
+    dataDimension: varchar("data_dimension", { length: 100 }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -211,6 +213,7 @@ export const resultTypes = pgTable(
     sortOrder: smallint("sort_order").notNull(),
     name: varchar("name", { length: 255 }).notNull(),
     description: text("description").notNull(),
+    recommendationDetail: text("recommendation_detail"),
     colour: varchar("colour", { length: 7 }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()

@@ -6,6 +6,7 @@ interface ScoreResult {
   resultTypeId: string
   name: string
   description: string
+  recommendationDetail: string | null
   colour: string | null
   score: number
 }
@@ -65,6 +66,7 @@ export async function calculateResult(
     resultTypeId: topResultType.id,
     name: topResultType.name,
     description: topResultType.description,
+    recommendationDetail: topResultType.recommendationDetail,
     colour: topResultType.colour,
     score: topScore,
   }

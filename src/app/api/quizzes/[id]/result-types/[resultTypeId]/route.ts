@@ -8,6 +8,7 @@ import { requireAuth } from "@/lib/session"
 const updateResultTypeSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   description: z.string().min(10).max(500).optional(),
+  recommendation_detail: z.string().max(1000).optional(),
   colour: z
     .string()
     .regex(/^#[0-9A-Fa-f]{6}$/, "Invalid hex colour")
@@ -56,6 +57,8 @@ export async function PATCH(
     if (result.data.name !== undefined) updates.name = result.data.name
     if (result.data.description !== undefined)
       updates.description = result.data.description
+    if (result.data.recommendation_detail !== undefined)
+      updates.recommendationDetail = result.data.recommendation_detail
     if (result.data.colour !== undefined) updates.colour = result.data.colour
 
     const [updated] = await db
