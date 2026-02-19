@@ -8,12 +8,12 @@ if (!connectionString) {
   throw new Error("DATABASE_URL environment variable is not set")
 }
 
-// For query purposes (connection pooling compatible)
 const client = postgres(connectionString, {
-  max: 10,
+  max: 1,
   idle_timeout: 20,
   connect_timeout: 10,
-  prepare: false, // Required for Supabase connection pooler (PgBouncer)
+  prepare: false,
+  ssl: "require",
 })
 
 export const db = drizzle(client, { schema })
